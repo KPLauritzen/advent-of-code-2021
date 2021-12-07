@@ -50,26 +50,38 @@ from pathlib import Path
 
 from src.utils import DataLoader
 
+def indicate_increasing(input_data):
+    for prev, curr in zip(input_data, input_data[1:]):
+        if curr > prev:
+            yield 1
+
+
+def count_increasing(input_data):
+    return sum(indicate_increasing(input_data))
 
 def part_1(input_data):
     """
     --- Part One ---
     """
-    # dif
-    # normalize
-    # sum
-    previous_depth = input_data[0]
-    count = 0
-    for depth in input_data:
-        if depth > previous_depth:
-            count += 1
-        previous_depth = depth
-    return count
+    return count_increasing(input_data)
+
+def rolling_sum(input_data):
+    for el1, el2, el3 in zip(input_data, input_data[1:], input_data[2:]):
+        yield el1+el2+el3
+
+def part_2(input_data):
+    """
+    --- Part Two ---
+    """
+    processed_data = [*rolling_sum(input_data)]
+    return count_increasing(processed_data)
 
 def main():
     dl_part_1 = DataLoader(Path("data/day_1_part_1.txt"))
     dl_part_1.transform_to_int()
     print(part_1(dl_part_1.data))
+
+    print(part_2(dl_part_1.data))
 
 if __name__ == "__main__":
     main()
